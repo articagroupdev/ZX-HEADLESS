@@ -3,24 +3,93 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --brand: #E61151;
+  --brand-hover: #c40e47;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-goldman), sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Tema claro (lienzo blanco) por defecto */
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
+
+/* Mejor toque en móvil: áreas de tap más claras */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  a,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+}
+
+/* Barra de desplazamiento en color brand (rosa) */
+html {
+  scrollbar-color: var(--brand) rgba(0, 0, 0, 0.1);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brand);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-hover);
+}
+
+/* Página Contact: 50% info + contacto, 50% formulario */
+@media (min-width: 768px) {
+  .contact-section-inner {
+    display: flex;
+    flex-direction: row;
+  }
+  .contact-form-col,
+  .contact-info-col {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+}
+@media (max-width: 767px) {
+  .contact-section-inner {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Página Cart: Shopping Cart y Order Summary siempre lado a lado desde 768px */
+@media (min-width: 768px) {
+  .cart-page-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    align-items: start;
+    gap: 2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .cart-page-grid {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 2.5rem;
+  }
+}
+
