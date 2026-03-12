@@ -27,10 +27,37 @@ const goldman = Goldman({
 });
 
 export const metadata: Metadata = {
-  title: { default: "ZX Line", template: "ZX Line | %s" },
+  metadataBase: new URL("https://zxline.us"),
+  title: {
+    default: "ZX LINE | Premium Intimate Wellness",
+    template: "%s | ZX LINE",
+  },
   description:
-    "Zx Line elevates your intimacy with luxury lubricants designed for unforgettable experiences. Premium quality, safety, and pleasure.",
-  icons: { icon: "/img/zx-icon.ico" },
+    "ZX LINE elevates your intimacy with luxury lubricants and intimate wellness essentials, crafted for unforgettable, safe and discreet experiences.",
+  icons: {
+    icon: "/img/zx-icon.ico",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "ZX LINE",
+    title: "ZX LINE | Premium Intimate Wellness",
+    description:
+      "Discover ZX LINE lubricants and intimate wellness products with premium quality, safety and discreet worldwide shipping.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ZX LINE | Premium Intimate Wellness",
+    description:
+      "Luxury lubricants and intimate wellness essentials with discreet shipping.",
+  },
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport: Viewport = {

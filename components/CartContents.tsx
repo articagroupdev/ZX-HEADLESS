@@ -35,6 +35,9 @@ function TrashIcon({ className }: { className?: string }) {
 }
 
 export function CartContents() {
+  const wordpressCheckoutUrl =
+    process.env.NEXT_PUBLIC_WORDPRESS_CHECKOUT_URL ?? "https://zxline.us/checkout";
+
   const {
     items,
     removeItem,
@@ -272,21 +275,6 @@ export function CartContents() {
           >
             Order Summary
           </h2>
-          <div className="mb-4 flex gap-2 sm:mb-6">
-            <input
-              type="text"
-              placeholder="Discount voucher"
-              className="min-h-[44px] min-w-0 flex-1 rounded-full border border-neutral-200 bg-white px-4 py-2.5 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-              style={{ touchAction: "manipulation" }}
-            />
-            <button
-              type="button"
-              className="min-h-[44px] shrink-0 rounded-full border border-neutral-200 bg-white px-5 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50 active:bg-neutral-100"
-              style={{ touchAction: "manipulation" }}
-            >
-              Apply
-            </button>
-          </div>
           <dl className="space-y-3 border-t border-neutral-100 pt-4">
             <div className="flex justify-between text-sm text-neutral-600">
               <dt>Sub Total</dt>
@@ -330,7 +318,8 @@ export function CartContents() {
             </span>
           </div>
           <Link
-            href="/checkout"
+            href={wordpressCheckoutUrl}
+            prefetch={false}
             className="mt-6 flex min-h-[48px] w-full items-center justify-center rounded-full bg-brand py-3.5 text-sm font-semibold uppercase tracking-wider text-white transition hover:brightness-110 active:scale-[0.98]"
             style={{ fontFamily: "var(--font-goldman), sans-serif", touchAction: "manipulation" }}
           >

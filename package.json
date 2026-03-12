@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "node server.js",
+    "start:cpanel": "node server.js",
+    "lint": "eslint",
+    "clean": "rm -rf .next node_modules"
   },
   "dependencies": {
     "embla-carousel-react": "^8.6.0",

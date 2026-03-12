@@ -1,0 +1,16 @@
+RewriteEngine On
+
+# Dejar que WordPress maneje directamente el admin y el login
+RewriteCond %{REQUEST_URI} ^/wp-admin [NC,OR]
+RewriteCond %{REQUEST_URI} ^/wp-login\.php [NC]
+RewriteRule ^ - [L]
+
+# Enviar todo lo que no sea archivo/carpeta físico al servidor Node interno
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
+
+# Cabeceras de seguridad básicas
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-XSS-Protection "1; mode=block"
+
