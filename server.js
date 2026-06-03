@@ -2,9 +2,30 @@ const { createServer } = require("http");
 const { parse } = require("url");
 const next = require("next");
 const fs = require("fs");
+const path = require("path");
 
 const dev = false;
 const port = process.env.PORT || 3000;
+
+// Diagnóstico al arranque — visible en logs de cPanel
+console.log("[ZX] ===== STARTUP DIAGNOSTICS =====");
+console.log("[ZX] process.cwd()   :", process.cwd());
+console.log("[ZX] __dirname       :", __dirname);
+console.log("[ZX] Node version    :", process.version);
+console.log("[ZX] NODE_ENV        :", process.env.NODE_ENV);
+const _publicImg = path.join(process.cwd(), "public", "img");
+const _publicImgDir = path.join(process.cwd(), "public");
+console.log("[ZX] public/ exists  :", fs.existsSync(_publicImgDir));
+console.log("[ZX] public/img/ exists:", fs.existsSync(_publicImg));
+if (fs.existsSync(_publicImg)) {
+  console.log("[ZX] public/img/ files :", fs.readdirSync(_publicImg).join(", "));
+} else {
+  console.log("[ZX] public/img/ NOT FOUND — images will 404");
+  // Intentar con __dirname como base alternativa
+  const _alt = path.join(__dirname, "public", "img");
+  console.log("[ZX] __dirname/public/img exists:", fs.existsSync(_alt));
+}
+console.log("[ZX] ===================================");
 const app = next({ dev, conf: { distDir: ".next" } });
 const handle = app.getRequestHandler();
 
