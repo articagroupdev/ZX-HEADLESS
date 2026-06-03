@@ -1,7 +1,7 @@
 "use client";
 
-/** Número para WhatsApp (código país + número sin espacios). +54 9 11 5664-1716 */
-const WHATSAPP_NUMBER = "5491156641716";
+/** Número para WhatsApp (código país + número sin espacios). +58 414-7931224 */
+const WHATSAPP_NUMBER = "584147931224";
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 /** URL de la imagen de fondo (B/N o siluetas). Si está vacía, se usa fondo claro. */
-const ABOUT_HERO_IMAGE_URL = "https://zxline.us/wp-content/uploads/2025/07/close-up-couple-cuddling-against-white-background-scaled.jpg";
+const ABOUT_HERO_IMAGE_URL = "/img/close-up-couple-cuddling-against-white-background-scaled.webp";
 
 interface AboutProps {
   backgroundImageUrl?: string | null;

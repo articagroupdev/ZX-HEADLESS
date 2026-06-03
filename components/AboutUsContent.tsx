@@ -5,19 +5,19 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 /** URL de la imagen de fondo del hero de ZX Line (About us). Déjala vacía para fondo neutro. */
-const ZXLINE_HERO_BG_URL = "https://zxline.us/wp-content/uploads/2026/03/3184.jpg";
+const ZXLINE_HERO_BG_URL = "/img/zxline-hero.webp";
 
 /** URL de la imagen de la sección "Who We Are" (card derecha). Déjala vacía para ver solo el placeholder. */
-const WHO_WE_ARE_IMAGE_URL = "https://zxline.us/wp-content/uploads/2025/07/hand-grasping-sheets-scaled.jpg";
+const WHO_WE_ARE_IMAGE_URL = "/img/who-we-are.webp";
 
 /** URL de la imagen de la sección "Our Mission" (card izquierda). Déjala vacía para ver solo el placeholder. */
-const OUR_MISSION_IMAGE_URL = "https://zxline.us/wp-content/uploads/2026/03/2149151753.jpg";
+const OUR_MISSION_IMAGE_URL = "/img/our-mission.webp";
 
 /** URL de la imagen de fondo de la sección "Our Commitment". Déjala vacía para fondo neutro. */
-const COMMITMENT_SECTION_BG_URL = "https://zxline.us/wp-content/uploads/2025/07/female-hand-scratching-lovers-back-having-passionate-sex-close-up-scaled.jpg";
+const COMMITMENT_SECTION_BG_URL = "/img/commitment-bg.webp";
 
 /** URL de la imagen de fondo de la sección "Our Promise to You". Mismo estilo que Commitment pero con otro color de overlay. Déjala vacía para fondo neutro. */
-const PROMISE_SECTION_BG_URL = "https://zxline.us/wp-content/uploads/2025/07/male-hands-stroking-female-back-passionate-couple-making-love-closeup-scaled.jpg";
+const PROMISE_SECTION_BG_URL = "/img/promise-bg.webp";
 
 const whyChooseItems = [
   {

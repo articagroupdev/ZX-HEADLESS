@@ -6,12 +6,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 
 /** Misma imagen de fondo que el hero de Shop */
-const HERO_IMAGE_URL = "https://zxline.us/wp-content/uploads/2026/03/2150276180.jpg";
+const HERO_IMAGE_URL = "/img/contact-hero.webp";
 
 /** URL de la imagen de fondo de la sección CTA (card). Overlay oscuro, no rosa. Vacío = fondo neutro. */
-const CTA_SECTION_BG_URL = "https://zxline.us/wp-content/uploads/2025/08/side-view-couple-s-hands-posing-scaled.jpg";
+const CTA_SECTION_BG_URL = "/img/side-view-couple-s-hands-posing-scaled.webp";
 
-const CONTACT_PHONE = "(303) 555-0105";
+const CONTACT_PHONE = "+58 414-7931224";
 const CONTACT_EMAIL = "info@zxline.us";
 const INSTAGRAM_URL = "https://www.instagram.com/zxline.us";
 const TIKTOK_URL = "https://www.tiktok.com/@zxline.us";
@@ -276,7 +276,7 @@ export function ContactContent() {
                     </div>
                   </a>
                   <a
-                    href={`tel:${CONTACT_PHONE.replace(/\D/g, "")}`}
+                    href="tel:+584147931224"
                     className="flex min-h-[44px] items-center gap-4 text-neutral-700 transition hover:text-brand"
                   >
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">

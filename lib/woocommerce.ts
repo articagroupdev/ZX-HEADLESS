@@ -1,11 +1,10 @@
 /**
  * WooCommerce REST API (solo servidor).
- * Usa Clave_del_cliente y Clave_secreta_de_cliente desde .env
  */
 
 const STORE_URL = process.env.WOOCOMMERCE_STORE_URL ?? "https://zxline.us";
-const CONSUMER_KEY = process.env.Clave_del_cliente ?? "";
-const CONSUMER_SECRET = process.env.Clave_secreta_de_cliente ?? "";
+const CONSUMER_KEY = process.env.WC_CONSUMER_KEY ?? "";
+const CONSUMER_SECRET = process.env.WC_CONSUMER_SECRET ?? "";
 
 /**
  * Normaliza la URL de una imagen de WooCommerce para que Next/Image pueda cargarla.
@@ -57,9 +56,13 @@ export interface WooProduct {
   attributes?: { id: number; name: string; options: string[] }[];
 }
 
-function getAuthHeader(): string {
-  const credentials = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString("base64");
-  return `Basic ${credentials}`;
+// Use query string auth — more reliable on cPanel/Apache where Authorization headers get stripped
+function addAuth(params: URLSearchParams): void {
+  if (!CONSUMER_KEY || !CONSUMER_SECRET) {
+    console.error("WooCommerce: missing credentials — WC_CONSUMER_KEY or WC_CONSUMER_SECRET not set");
+  }
+  params.set("consumer_key", CONSUMER_KEY);
+  params.set("consumer_secret", CONSUMER_SECRET);
 }
 
 export async function getProducts(params?: {
@@ -72,13 +75,10 @@ export async function getProducts(params?: {
     status: "publish",
     ...(params?.category && { category: params.category }),
   });
+  addAuth(searchParams);
   const url = `${STORE_URL}/wp-json/wc/v3/products?${searchParams}`;
 
   const res = await fetch(url, {
-    headers: {
-      Authorization: getAuthHeader(),
-      "Content-Type": "application/json",
-    },
     next: { revalidate: 60 },
   });
 
@@ -94,7 +94,6 @@ export async function getProducts(params?: {
 
 /**
  * Productos relacionados por categoría (excluye el producto actual).
- * Usa la primera categoría del producto para obtener otros de la misma.
  */
 export async function getRelatedProducts(
   productId: number,
@@ -116,13 +115,11 @@ export interface WooCategory {
 }
 
 export async function getCategories(): Promise<WooCategory[]> {
-  const url = `${STORE_URL}/wp-json/wc/v3/products/categories?per_page=50`;
+  const searchParams = new URLSearchParams({ per_page: "50" });
+  addAuth(searchParams);
+  const url = `${STORE_URL}/wp-json/wc/v3/products/categories?${searchParams}`;
 
   const res = await fetch(url, {
-    headers: {
-      Authorization: getAuthHeader(),
-      "Content-Type": "application/json",
-    },
     next: { revalidate: 120 },
   });
 
@@ -145,14 +142,9 @@ export async function getProductsByIds(ids: number[]): Promise<WooProduct[]> {
     status: "publish",
     per_page: String(unique.length),
   });
+  addAuth(searchParams);
   const url = `${STORE_URL}/wp-json/wc/v3/products?${searchParams}`;
-  const res = await fetch(url, {
-    headers: {
-      Authorization: getAuthHeader(),
-      "Content-Type": "application/json",
-    },
-    next: { revalidate: 60 },
-  });
+  const res = await fetch(url, { next: { revalidate: 60 } });
   if (!res.ok) return [];
   const data = await res.json();
   const list = Array.isArray(data) ? data : [];
@@ -161,15 +153,10 @@ export async function getProductsByIds(ids: number[]): Promise<WooProduct[]> {
 
 export async function getProductBySlug(slug: string): Promise<WooProduct | null> {
   const searchParams = new URLSearchParams({ slug, status: "publish" });
+  addAuth(searchParams);
   const url = `${STORE_URL}/wp-json/wc/v3/products?${searchParams}`;
 
-  const res = await fetch(url, {
-    headers: {
-      Authorization: getAuthHeader(),
-      "Content-Type": "application/json",
-    },
-    next: { revalidate: 60 },
-  });
+  const res = await fetch(url, { next: { revalidate: 60 } });
 
   if (!res.ok) {
     const text = await res.text();
@@ -199,14 +186,10 @@ export interface WooCustomer {
 export async function getCustomer(
   customerId: number
 ): Promise<WooCustomer | null> {
-  const url = `${STORE_URL}/wp-json/wc/v3/customers/${customerId}`;
-  const res = await fetch(url, {
-    headers: {
-      Authorization: getAuthHeader(),
-      "Content-Type": "application/json",
-    },
-    next: { revalidate: 0 },
-  });
+  const searchParams = new URLSearchParams();
+  addAuth(searchParams);
+  const url = `${STORE_URL}/wp-json/wc/v3/customers/${customerId}?${searchParams}`;
+  const res = await fetch(url, { next: { revalidate: 0 } });
   if (!res.ok) return null;
   return res.json();
 }
@@ -223,14 +206,10 @@ export interface WooOrder {
 export async function getOrdersByCustomer(
   customerId: number
 ): Promise<WooOrder[]> {
-  const url = `${STORE_URL}/wp-json/wc/v3/orders?customer=${customerId}&per_page=20`;
-  const res = await fetch(url, {
-    headers: {
-      Authorization: getAuthHeader(),
-      "Content-Type": "application/json",
-    },
-    next: { revalidate: 0 },
-  });
+  const searchParams = new URLSearchParams({ customer: String(customerId), per_page: "20" });
+  addAuth(searchParams);
+  const url = `${STORE_URL}/wp-json/wc/v3/orders?${searchParams}`;
+  const res = await fetch(url, { next: { revalidate: 0 } });
   if (!res.ok) return [];
   const data = await res.json();
   return Array.isArray(data) ? data : [];
@@ -267,13 +246,12 @@ export async function setFavorites(
       )
     : [...meta_data, { key: FAVORITES_META_KEY, value }];
 
-  const url = `${STORE_URL}/wp-json/wc/v3/customers/${customerId}`;
+  const searchParams = new URLSearchParams();
+  addAuth(searchParams);
+  const url = `${STORE_URL}/wp-json/wc/v3/customers/${customerId}?${searchParams}`;
   const res = await fetch(url, {
     method: "PATCH",
-    headers: {
-      Authorization: getAuthHeader(),
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ meta_data: newMeta }),
     cache: "no-store",
   });

@@ -7,7 +7,7 @@ import { useCart } from "@/context/CartContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useState, useEffect } from "react";
 
-const LOGO_URL = "https://zxline.us/wp-content/uploads/2026/03/cropped-zx-512x512-1-e1772724043352-removebg-preview.png";
+const LOGO_URL = "/img/logo.webp";
 
 const nav = [
   { label: "HOME", href: "/" },

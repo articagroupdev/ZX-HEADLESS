@@ -12,8 +12,7 @@ const STORAGE_KEY = "zx-announcement-modal-dismissed";
  */
 const DEFAULT_SHOP_URL = "/shop";
 
-const DEFAULT_MODAL_IMAGE_URL =
-  "https://zxline.us/wp-content/uploads/2026/02/close-up-sex-toys-1-scaled.jpg";
+const DEFAULT_MODAL_IMAGE_URL = "/img/modal-promo.webp";
 
 interface AnnouncementModalProps {
   /** URL de la imagen del modal (producto, logo o decorativa). */

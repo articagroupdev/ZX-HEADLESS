@@ -1,14 +1,34 @@
 const { createServer } = require("http");
 const { parse } = require("url");
 const next = require("next");
+const fs = require("fs");
 
-// Forzar modo producción en cPanel para ahorrar recursos
 const dev = false;
 const port = process.env.PORT || 3000;
-
-// Usar el directorio de build por defecto (.next)
 const app = next({ dev, conf: { distDir: ".next" } });
 const handle = app.getRequestHandler();
+
+// File watcher — cuando GitHub Actions sube .restart al final del deploy,
+// este proceso detecta el cambio y llama process.exit(1).
+// Phusion Passenger reinicia el proceso automáticamente con el nuevo build.
+const RESTART_FILE = ".restart";
+let lastMtime = (() => {
+  try {
+    return fs.statSync(RESTART_FILE).mtimeMs;
+  } catch {
+    return 0;
+  }
+})();
+
+setInterval(() => {
+  try {
+    const mtime = fs.statSync(RESTART_FILE).mtimeMs;
+    if (mtime !== lastMtime) {
+      console.log("Restart file updated, restarting...");
+      process.exit(1);
+    }
+  } catch {}
+}, 5000);
 
 app
   .prepare()
@@ -35,4 +55,3 @@ app
     console.error(ex.stack);
     process.exit(1);
   });
-

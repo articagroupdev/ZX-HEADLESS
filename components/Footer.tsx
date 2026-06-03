@@ -1,8 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-const LOGO_URL =
-  "https://zxline.us/wp-content/uploads/2026/03/cropped-zx-512x512-1-e1772724043352-removebg-preview.png";
+const LOGO_URL = "/img/logo.webp";
 
 const shopLinks = [
   { label: "My account", href: "/account" },
@@ -18,8 +17,8 @@ const quickLinks = [
 ];
 
 const CONTACT_EMAIL = "info@zxline.us";
-const CONTACT_PHONE = "(303) 555-0105";
-const CONTACT_PHONE_TEL = "+13035550105";
+const CONTACT_PHONE = "+58 414-7931224";
+const CONTACT_PHONE_TEL = "+584147931224";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -147,14 +146,14 @@ export function Footer() {
             </p>
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="inline-flex items-center gap-2 text-sm text-white/90 transition hover:text-white hover:underline underline-offset-2"
+              className="flex items-center gap-2 text-sm text-white/90 transition hover:text-white hover:underline underline-offset-2"
             >
               <MailIcon className="h-4 w-4 shrink-0 opacity-80" />
               {CONTACT_EMAIL}
             </a>
             <a
               href={`tel:${CONTACT_PHONE_TEL}`}
-              className="mt-2 inline-block text-sm text-white/80 transition hover:text-white hover:underline underline-offset-2"
+              className="mt-2 block text-sm text-white/80 transition hover:text-white hover:underline underline-offset-2"
             >
               {CONTACT_PHONE}
             </a>

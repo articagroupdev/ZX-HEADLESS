@@ -16,7 +16,7 @@ const PRODUCTS_PER_PAGE = 24;
  * URL de la imagen de fondo del hero de la página Shop.
  * Pega aquí la URL cuando la tengas; si está vacía se muestra un fondo neutro.
  */
-const SHOP_HERO_IMAGE_URL = "https://zxline.us/wp-content/uploads/2025/08/d82afe60-1b91-48d6-bfa2-e38bdffcca47-scaled.jpg";
+const SHOP_HERO_IMAGE_URL = "/img/shop-hero.webp";
 
 interface ShopPageProps {
   searchParams: Promise<{ category?: string }>;

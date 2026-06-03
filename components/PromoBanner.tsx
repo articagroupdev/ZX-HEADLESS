@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
  * La imagen cubre todo el espacio de la sección sin bordes visibles.
  * Pega aquí la URL o pásala por la prop backgroundImageUrl desde la página.
  */
-const PROMO_SECTION_BACKGROUND_URL = "https://zxline.us/wp-content/uploads/2025/07/man-woman-holding-hands-while-bed-scaled.jpg";
+const PROMO_SECTION_BACKGROUND_URL = "/img/man-woman-holding-hands-while-bed-scaled.webp";
 /**
  * URL de la imagen del bloque rosa (icono + "POTENCIADOR VIGORIZANTE").
  * La imagen ocupa todo el espacio del bloque sin bordes visibles.
