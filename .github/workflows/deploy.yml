@@ -48,9 +48,9 @@ jobs:
           from datetime import datetime, timezone
 
           server    = os.environ['FTP_SERVER'].replace('ftp://', '').replace('ftps://', '').strip().rstrip('/')
-          username  = os.environ['FTP_USERNAME']
-          password  = os.environ['FTP_PASSWORD']
-          directory = os.environ['FTP_SERVER_DIR']
+          username  = os.environ['FTP_USERNAME'].strip()
+          password  = os.environ['FTP_PASSWORD'].strip()
+          directory = os.environ['FTP_SERVER_DIR'].strip()
 
           content = datetime.now(timezone.utc).isoformat().encode()
           with ftplib.FTP(server) as ftp:
