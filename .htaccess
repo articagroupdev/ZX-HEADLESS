@@ -1,5 +1,9 @@
 RewriteEngine On
 
+# Forzar sitemap y robots.txt a Next.js siempre (antes de que WordPress los intercepte)
+RewriteRule ^sitemap\.xml$ http://127.0.0.1:3000/sitemap.xml [P,L]
+RewriteRule ^robots\.txt$ http://127.0.0.1:3000/robots.txt [P,L]
+
 # Dejar que WordPress maneje directamente el admin y el login
 RewriteCond %{REQUEST_URI} ^/wp-admin [NC,OR]
 RewriteCond %{REQUEST_URI} ^/wp-login\.php [NC]
