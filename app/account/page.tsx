@@ -2,8 +2,9 @@ import Link from "next/link";
 import { AccountLogin } from "@/components/AccountLogin";
 
 export const metadata = {
-  title: "Acceder",
-  description: "Inicia sesión en tu cuenta ZX LINE",
+  title: "Sign In",
+  description: "Sign in to your ZX LINE account.",
+  robots: { index: false, follow: false },
 };
 
 export default function AccountPage() {
@@ -15,20 +16,20 @@ export default function AccountPage() {
             className="mb-1 text-2xl font-semibold tracking-tight text-neutral-900"
             style={{ fontFamily: "var(--font-goldman), sans-serif" }}
           >
-            Acceder
+            Sign In
           </h1>
           <p className="mb-6 text-sm text-neutral-500">
-            Introduce tu usuario y contraseña de aplicación.
+            Enter your username and application password.
           </p>
           <AccountLogin />
         </div>
         <p className="mt-6 text-center text-sm text-neutral-500">
-          ¿No tienes cuenta?{" "}
+          Don&apos;t have an account?{" "}
           <Link
             href="/register"
             className="font-medium text-brand underline hover:no-underline"
           >
-            Crear cuenta
+            Create account
           </Link>
         </p>
         <p className="mt-4 text-center">
@@ -36,7 +37,7 @@ export default function AccountPage() {
             href="/"
             className="text-sm text-neutral-500 underline hover:text-neutral-700"
           >
-            ← Volver al inicio
+            ← Back to home
           </Link>
         </p>
       </div>

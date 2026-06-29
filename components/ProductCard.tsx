@@ -101,7 +101,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             toggleFavorite(product.id);
           }}
           className="absolute right-2 top-2 flex h-10 w-10 items-center justify-center rounded-full text-neutral-800/80 transition hover:bg-white/90 hover:text-brand active:scale-95 disabled:opacity-60 sm:right-3 sm:top-3"
-          aria-label={favorited ? "Quitar de favoritos" : "Añadir a favoritos"}
+          aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
         >
           <HeartIcon
             className={`h-4 w-4 ${favorited ? "text-brand" : ""}`}
@@ -134,7 +134,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             href={`/product/${product.slug}`}
             className="flex items-center self-stretch py-2 text-xs font-medium text-neutral-500 underline-offset-2 hover:text-brand hover:underline sm:py-0"
           >
-            Ver detalle
+            View details
           </Link>
           <AddToCartButton
             product={{
@@ -145,7 +145,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               imageSrc,
             }}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-brand transition hover:bg-brand/10 hover:text-brand active:scale-95"
-            aria-label="Añadir al carrito"
+            aria-label="Add to cart"
           >
             <CartBagIcon className="h-5 w-5" />
           </AddToCartButton>

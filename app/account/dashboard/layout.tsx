@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Mi cuenta",
-  description: "Tu perfil, pedidos y direcciones",
+  title: "My Account",
+  description: "Your profile, orders and addresses.",
+  robots: { index: false, follow: false },
 };
 
 export default function DashboardLayout({

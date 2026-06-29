@@ -26,6 +26,13 @@ const goldman = Goldman({
   display: "swap",
 });
 
+const OG_IMAGE = {
+  url: "/img/zxline-hero.webp",
+  width: 1200,
+  height: 630,
+  alt: "ZX LINE | Premium Intimate Wellness",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://zxline.us"),
   title: {
@@ -44,12 +51,14 @@ export const metadata: Metadata = {
     title: "ZX LINE | Premium Intimate Wellness",
     description:
       "Discover ZX LINE lubricants and intimate wellness products with premium quality, safety and discreet worldwide shipping.",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "ZX LINE | Premium Intimate Wellness",
     description:
       "Luxury lubricants and intimate wellness essentials with discreet shipping.",
+    images: ["/img/zxline-hero.webp"],
   },
   alternates: {
     canonical: "/",
@@ -58,6 +67,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+    : {}),
 };
 
 export const viewport: Viewport = {
@@ -65,6 +77,25 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
 };
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "ZX LINE",
+    url: "https://zxline.us",
+    logo: "https://zxline.us/img/logo.webp",
+    description:
+      "ZX LINE elevates your intimacy with luxury lubricants and intimate wellness essentials.",
+    sameAs: [],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "ZX LINE",
+    url: "https://zxline.us",
+  },
+];
 
 export default function RootLayout({
   children,
@@ -77,6 +108,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen overflow-x-hidden bg-white font-sans text-neutral-900 antialiased`}
         suppressHydrationWarning
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <CartProvider>
           <FavoritesProvider>
             <LenisProvider>

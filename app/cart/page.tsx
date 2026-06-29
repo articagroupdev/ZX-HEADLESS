@@ -1,8 +1,9 @@
 import { CartContents } from "@/components/CartContents";
 
 export const metadata = {
-  title: "Shopping Cart | ZX LINE",
-  description: "Your cart. Premium intimate wellness.",
+  title: "Shopping Cart",
+  description: "Review your selected ZX LINE products before checkout.",
+  robots: { index: false, follow: false },
 };
 
 export default function CartPage() {

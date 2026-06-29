@@ -4,22 +4,46 @@ import { getProducts, getCategories } from "@/lib/woocommerce";
 import { ProductCard } from "@/components/ProductCard";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Shop",
-  description:
-    "Explore our collection of premium intimate wellness products. ZX LINE.",
-};
-
+const BASE_URL = "https://zxline.us";
 const PRODUCTS_PER_PAGE = 24;
-
-/**
- * URL de la imagen de fondo del hero de la página Shop.
- * Pega aquí la URL cuando la tengas; si está vacía se muestra un fondo neutro.
- */
 const SHOP_HERO_IMAGE_URL = "/img/shop-hero.webp";
 
 interface ShopPageProps {
   searchParams: Promise<{ category?: string }>;
+}
+
+export async function generateMetadata({ searchParams }: ShopPageProps): Promise<Metadata> {
+  const { category: categorySlug } = await searchParams;
+
+  if (categorySlug) {
+    const categories = await getCategories();
+    const category = categories.find((c) => c.slug === categorySlug);
+    const categoryName = category?.name ?? categorySlug;
+    return {
+      title: `${categoryName} — Shop`,
+      description: `Shop ${categoryName} — premium intimate wellness products by ZX LINE. Discreet worldwide shipping.`,
+      alternates: {
+        canonical: `/shop?category=${categorySlug}`,
+      },
+      openGraph: {
+        title: `${categoryName} — Shop | ZX LINE`,
+        url: `/shop?category=${categorySlug}`,
+      },
+    };
+  }
+
+  return {
+    title: "Shop",
+    description:
+      "Explore our full collection of premium lubricants and intimate wellness products. Discreet worldwide shipping. ZX LINE.",
+    alternates: {
+      canonical: "/shop",
+    },
+    openGraph: {
+      title: "Shop | ZX LINE",
+      url: "/shop",
+    },
+  };
 }
 
 export default async function ShopPage({ searchParams }: ShopPageProps) {
@@ -37,9 +61,45 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const activeCategorySlug = categorySlug ?? null;
   const hasHeroImage = Boolean(SHOP_HERO_IMAGE_URL?.trim());
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: BASE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Shop",
+        item: `${BASE_URL}/shop`,
+      },
+      ...(activeCategorySlug
+        ? [
+            {
+              "@type": "ListItem",
+              position: 3,
+              name:
+                categories.find((c) => c.slug === activeCategorySlug)?.name ??
+                activeCategorySlug,
+              item: `${BASE_URL}/shop?category=${activeCategorySlug}`,
+            },
+          ]
+        : []),
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      {/* Hero con imagen de fondo */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
+      {/* Hero */}
       <section className="relative flex min-h-[28vh] items-center justify-center overflow-hidden px-4 py-10 sm:min-h-[40vh] sm:px-6 sm:py-20 lg:min-h-[45vh] lg:py-28">
         {hasHeroImage ? (
           <>
@@ -92,10 +152,20 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               Home
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-neutral-900">Shop</span>
+            {activeCategorySlug ? (
+              <>
+                <Link href="/shop" className="hover:text-neutral-900">
+                  Shop
+                </Link>
+                <span className="mx-2">/</span>
+                <span className="text-neutral-900">
+                  {categories.find((c) => c.slug === activeCategorySlug)?.name ?? activeCategorySlug}
+                </span>
+              </>
+            ) : (
+              <span className="text-neutral-900">Shop</span>
+            )}
           </nav>
-
-          {/* Header (título ya está en hero, aquí solo filtros) */}
 
           {/* Category filter */}
           {categories.length > 0 && (
@@ -170,4 +240,3 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
     </div>
   );
 }
-

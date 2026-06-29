@@ -6,8 +6,19 @@ import { ProductGallery } from "@/components/ProductGallery";
 import { RelatedProducts } from "@/components/RelatedProducts";
 import type { Metadata } from "next";
 
+const BASE_URL = "https://zxline.us";
+
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  try {
+    const products = await getProducts({ per_page: 100 });
+    return products.map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({
@@ -16,18 +27,29 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) return { title: "Product not found" };
+
+  const imageUrl = product.image?.src || product.images?.[0]?.src;
+  const description =
+    product.short_description?.replace(/<[^>]*>/g, "").slice(0, 160) ??
+    undefined;
+
   return {
     title: product.name,
-    description:
-      product.short_description?.replace(/<[^>]*>/g, "").slice(0, 160) ??
-      undefined,
+    description,
+    alternates: {
+      canonical: `/product/${slug}`,
+    },
     openGraph: {
       title: product.name,
-      images: product.image?.src
-        ? [product.image.src]
-        : product.images?.[0]?.src
-          ? [product.images[0].src]
-          : undefined,
+      description,
+      url: `/product/${slug}`,
+      images: imageUrl ? [{ url: imageUrl, alt: product.name }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description,
+      images: imageUrl ? [imageUrl] : undefined,
     },
   };
 }
@@ -40,7 +62,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  // Unificar imagen destacada + galería y normalizar URLs (//, relativas, http→https)
+  // Unify featured image + gallery and normalize URLs
   const featured = product.image?.src ? product.image : null;
   const galleryImages: WooProductImage[] = product.images ?? [];
   const seen = new Set<string>();
@@ -89,9 +111,64 @@ export default async function ProductPage({ params }: ProductPageProps) {
     relatedProducts = others.filter((p) => p.id !== product.id).slice(0, 4);
   }
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.short_description?.replace(/<[^>]*>/g, "") || undefined,
+    image: gallery.length > 0 ? gallery.map((img) => img.src) : undefined,
+    brand: {
+      "@type": "Brand",
+      name: "ZX LINE",
+    },
+    offers: {
+      "@type": "Offer",
+      price: price,
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+      url: `${BASE_URL}/product/${product.slug}`,
+      seller: {
+        "@type": "Organization",
+        name: "ZX LINE",
+      },
+    },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: BASE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Shop",
+        item: `${BASE_URL}/shop`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: product.name,
+        item: `${BASE_URL}/product/${product.slug}`,
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      {/* Breadcrumb minimal */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([productJsonLd, breadcrumbJsonLd]),
+        }}
+      />
+
+      {/* Breadcrumb */}
       <div className="border-b border-neutral-100 bg-neutral-50/40">
         <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-5 lg:px-12">
           <nav
@@ -103,10 +180,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </Link>
             <span className="mx-2 text-neutral-300">/</span>
             <Link
-              href="/#products"
+              href="/shop"
               className="transition hover:text-neutral-600"
             >
-              Products
+              Shop
             </Link>
             <span className="mx-2 text-neutral-300">/</span>
             <span className="text-neutral-900">{product.name}</span>
@@ -117,7 +194,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       {/* Main content: gallery + info */}
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-12 lg:py-16">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 xl:gap-20">
-          {/* Gallery: Embla swipe */}
+          {/* Gallery */}
           <div className="lg:sticky lg:top-8 lg:self-start">
             <ProductGallery
               images={gallery}

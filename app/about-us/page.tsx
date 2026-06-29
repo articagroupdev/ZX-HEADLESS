@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
-/** Redirige /about-us a la página oficial Nosotros en /zx-line */
 export default function AboutUsPage() {
-  redirect("/zx-line");
+  permanentRedirect("/zx-line");
 }
