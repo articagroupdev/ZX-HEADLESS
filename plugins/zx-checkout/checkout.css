@@ -1,0 +1,1965 @@
+/* ================================================================
+   ZX Checkout — CartFlow-style · ink #171717 · brand #E61151
+   ================================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:      #171717;
+  --teal:      #E61151;
+  --teal-10:   rgba(230,17,81,.1);
+  --teal-20:   rgba(230,17,81,.2);
+  --teal-glow: 0 4px 16px rgba(230,17,81,.35);
+  --teal-lt:   #FDE7EE;
+  --n50:       #FAFAFA;
+  --n100:      #F5F5F5;
+  --n200:      #E5E5E5;
+  --n300:      #D4D4D4;
+  --n400:      #A3A3A3;
+  --n500:      #737373;
+  --n700:      #404040;
+  --r-sm:      8px;
+  --r:         12px;
+  --r-lg:      16px;
+  --r-xl:      20px;
+  --r-full:    9999px;
+  --sh-sm:     0 1px 3px rgba(0,0,0,.05),0 1px 2px rgba(0,0,0,.04);
+  --sh:        0 4px 12px rgba(0,0,0,.07),0 1px 3px rgba(0,0,0,.04);
+  --sh-lg:     0 8px 24px rgba(0,0,0,.09),0 2px 6px rgba(0,0,0,.04);
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+
+body.zx-checkout-page {
+  background: var(--n50);
+  font-family: 'Geist', system-ui, sans-serif;
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+
+.zx-header {
+  position: relative;
+  z-index: 200;
+  background: #fff;
+  border-bottom: 1px solid var(--n200);
+  box-shadow: var(--sh-sm);
+}
+
+.zx-header__inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+}
+
+/* Logo */
+.zx-logo-link { flex-shrink: 0; line-height: 0; text-decoration: none; }
+.zx-logo-img  { height: 44px; width: auto; display: block; object-fit: contain; }
+
+/* Progress steps */
+.zx-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 1.25rem 1rem 0.75rem;
+}
+
+.zx-step {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--n400);
+  white-space: nowrap;
+}
+
+.zx-step--done  { color: var(--teal); }
+.zx-step--active { color: var(--navy); }
+
+.zx-step__dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--n200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0;
+  transition: background .2s;
+}
+
+.zx-step--done   .zx-step__dot { background: var(--teal); color: #fff; font-size: inherit; }
+.zx-step--active .zx-step__dot { background: var(--navy); box-shadow: 0 0 0 3px var(--teal-10); }
+
+.zx-step__line {
+  width: 36px;
+  height: 1px;
+  background: var(--n200);
+  margin: 0 0.25rem;
+  flex-shrink: 0;
+}
+
+.zx-step__label { font-family: 'Goldman', sans-serif; font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; }
+
+/* Secure */
+.zx-header__secure {
+  display: none;
+  justify-self: end;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--n400);
+  flex-shrink: 0;
+}
+@media (min-width: 640px) { .zx-header__secure { display: flex; } }
+
+/* ── Pill badge ─────────────────────────────────────────────── */
+
+.zx-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--teal-lt);
+  color: var(--teal);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--r-full);
+  line-height: 1.6;
+  flex-shrink: 0;
+}
+
+/* ── Mobile summary bar ─────────────────────────────────────── */
+
+.zx-mobile-bar {
+  background: #fff;
+  border-bottom: 1px solid var(--n200);
+}
+@media (min-width: 1024px) { .zx-mobile-bar { display: none; } }
+
+.zx-mobile-bar__btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  gap: 0.75rem;
+}
+
+.zx-mobile-bar__left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--teal);
+}
+
+.zx-mobile-bar__right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-left: auto;
+}
+
+.zx-caret { transition: transform .2s; flex-shrink: 0; }
+.zx-caret.open { transform: rotate(180deg); }
+
+.zx-mobile-bar__body {
+  border-top: 1px solid var(--n100);
+  padding: 0.5rem 1.25rem 1.25rem;
+}
+
+/* Mobile summary: product table — identical rules to #order_review */
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table { display: block !important; width: 100%; }
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table thead { display: none !important; }
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tbody,
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot { display: block !important; }
+
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tbody tr {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.875rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--n100);
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tbody tr:last-child { border-bottom: none; }
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tbody td {
+  display: block !important;
+  padding: 0 !important;
+  border: none !important;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tbody td.product-name { flex: 1; min-width: 0; }
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tbody td.product-total {
+  font-weight: 700; color: var(--navy); font-size: 0.875rem; flex-shrink: 0;
+}
+
+/* Totals rows */
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot tr {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4375rem 0;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot td,
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot th {
+  display: block !important;
+  padding: 0 !important;
+  font-size: 0.8125rem;
+  color: var(--n500);
+  border: none !important;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot .cart-subtotal {
+  border-top: 1px solid var(--n100) !important;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot .order-total {
+  border-top: 2px solid var(--n200) !important;
+  padding: 0.875rem 0 !important;
+  margin-top: 0.25rem;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot .order-total th,
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot .order-total td {
+  font-family: 'Goldman', sans-serif !important;
+  font-weight: 800 !important;
+  color: var(--navy) !important;
+  font-size: 1.0625rem !important;
+  padding: 0 !important;
+}
+
+/* ── Main layout ────────────────────────────────────────────── */
+
+.zx-main {
+  padding: 2rem 0 5rem;
+}
+
+.zx-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.zx-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Hide right sidebar on mobile — the collapsible bar covers it */
+@media (max-width: 1023px) {
+  .zx-right { display: none; }
+}
+
+@media (min-width: 1024px) {
+  .zx-layout {
+    grid-template-columns: 1fr 420px;
+  }
+  .zx-right {
+    position: sticky;
+    top: 1.5rem;
+  }
+}
+
+/* Page eyebrow + title */
+.zx-page-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.25rem;
+}
+
+.zx-page-title {
+  font-family: 'Goldman', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 1.5rem;
+  line-height: 1.15;
+}
+
+/* ── Section cards (WooCommerce billing/shipping output) ─────── */
+
+.woocommerce-billing-fields,
+.woocommerce-shipping-fields,
+.woocommerce-additional-fields {
+  background: #fff;
+  border: 1px solid var(--n200);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-sm);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.woocommerce-billing-fields h3,
+.woocommerce-shipping-fields h3,
+.woocommerce-additional-fields h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Goldman', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--n100);
+  margin: 0;
+}
+
+.woocommerce-billing-fields__field-wrapper,
+.woocommerce-shipping-fields__field-wrapper,
+.woocommerce-additional-fields__field-wrapper {
+  padding: 1.25rem;
+}
+
+/* Ship to different address
+ * The wrapper is transparent: the toggle (h3) and the address fields
+ * are the two cards, so we never get cards stacked inside cards. */
+.woocommerce-shipping-fields {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.woocommerce-shipping-fields h3#ship-to-different-address {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--n200);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-sm);
+  padding: 0.875rem 1.25rem;
+  margin: 0 0 1rem;
+  cursor: pointer;
+}
+
+#ship-to-different-address label {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: 'Goldman', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+  cursor: pointer;
+  margin: 0;
+}
+
+#ship-to-different-address label input[type="checkbox"] {
+  accent-color: var(--teal);
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.woocommerce-shipping-fields .shipping_address {
+  background: #fff;
+  border: 1px solid var(--n200);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-sm);
+  margin-bottom: 1rem;
+}
+
+/* Clear floated two-column rows so cards wrap their fields */
+.woocommerce-billing-fields__field-wrapper::after,
+.woocommerce-shipping-fields__field-wrapper::after,
+.woocommerce-additional-fields__field-wrapper::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* ── Form rows ──────────────────────────────────────────────── */
+
+.zx-left .form-row {
+  padding: 0;
+  margin: 0 0 0.875rem;
+}
+.zx-left .form-row:last-child { margin-bottom: 0; }
+
+.zx-left .form-row label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 0.375rem;
+}
+
+.zx-left .form-row label .required {
+  color: var(--teal);
+  text-decoration: none;
+}
+
+.zx-left .form-row input.input-text,
+.zx-left .form-row textarea,
+.zx-left .form-row select {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-family: 'Geist', sans-serif;
+  color: var(--navy);
+  background: var(--n50);
+  border: 1.5px solid var(--n200);
+  border-radius: var(--r) !important;
+  height: auto;
+  line-height: 1.5;
+  box-shadow: none;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.zx-left .form-row input.input-text:focus,
+.zx-left .form-row textarea:focus,
+.zx-left .form-row select:focus {
+  border-color: var(--teal) !important;
+  box-shadow: 0 0 0 3px var(--teal-10) !important;
+  background: #fff;
+}
+
+.zx-left .form-row input.input-text::placeholder,
+.zx-left .form-row textarea::placeholder {
+  color: var(--n400);
+}
+
+.zx-left .form-row input.input-checkbox {
+  width: auto !important;
+  height: auto !important;
+  accent-color: var(--teal);
+}
+
+/* Two-column rows */
+.zx-left .form-row-first,
+.zx-left .form-row-last {
+  width: calc(50% - 0.375rem) !important;
+}
+.zx-left .form-row-first { float: left !important; }
+.zx-left .form-row-last  { float: right !important; }
+
+@media (max-width: 500px) {
+  .zx-left .form-row-first,
+  .zx-left .form-row-last {
+    width: 100% !important;
+    float: none !important;
+  }
+}
+
+.zx-left .form-row textarea { min-height: 88px; resize: vertical; }
+
+/* ── Select2 ────────────────────────────────────────────────── */
+
+.select2-container--default .select2-selection--single {
+  border: 1.5px solid var(--n200) !important;
+  border-radius: var(--r) !important;
+  background: var(--n50) !important;
+  height: auto !important;
+  padding: 0.75rem 2.5rem 0.75rem 1rem !important;
+  font-size: 0.875rem !important;
+  font-family: 'Geist', sans-serif !important;
+  color: var(--navy) !important;
+  line-height: 1.5 !important;
+  box-shadow: none !important;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--single,
+.select2-container--default.select2-container--open .select2-selection--single {
+  border-color: var(--teal) !important;
+  box-shadow: 0 0 0 3px var(--teal-10) !important;
+  background: #fff !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: var(--navy) !important;
+  line-height: 1.5 !important;
+  padding: 0 !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 100% !important;
+  top: 0 !important;
+  right: 0.875rem !important;
+}
+
+.select2-dropdown {
+  border: 1px solid var(--n200) !important;
+  border-radius: var(--r) !important;
+  box-shadow: var(--sh-lg) !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background: var(--teal) !important;
+}
+
+/* ── Summary card ───────────────────────────────────────────── */
+
+.zx-summary-card {
+  background: #fff;
+  border: 1px solid var(--n200);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh);
+  /* No overflow:hidden — would trap blockUI overlay and block pointer events */
+  margin-bottom: 0.875rem;
+}
+
+.zx-summary-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--n100);
+}
+
+.zx-summary-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Goldman', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+.zx-summary-card__title svg { color: var(--teal); flex-shrink: 0; }
+
+/* ── Order review (WooCommerce table → flex layout) ─────────── */
+
+/* position:relative is required so WooCommerce blockUI overlay stays inside this div */
+#order_review {
+  position: relative;
+}
+
+#order_review table.woocommerce-checkout-review-order-table {
+  display: block !important;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Hide "Product / Subtotal" column headers */
+#order_review table.woocommerce-checkout-review-order-table thead {
+  display: none !important;
+}
+
+#order_review table.woocommerce-checkout-review-order-table tbody,
+#order_review table.woocommerce-checkout-review-order-table tfoot {
+  display: block !important;
+}
+
+/* Product row → flex */
+#order_review table.woocommerce-checkout-review-order-table tbody tr {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.875rem;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--n100);
+}
+#order_review table.woocommerce-checkout-review-order-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+#order_review table.woocommerce-checkout-review-order-table tbody td {
+  display: block !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+#order_review table.woocommerce-checkout-review-order-table tbody td.product-name {
+  flex: 1;
+  min-width: 0;
+}
+
+#order_review table.woocommerce-checkout-review-order-table tbody td.product-total {
+  font-weight: 700;
+  color: var(--navy);
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+/* ── Product thumbnail (injected via PHP filter) ─────────────── */
+
+.zx-item-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Image + badge wrapper — position:relative anchors the qty badge */
+.zx-item-img-wrap {
+  position: relative;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.zx-item-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r);
+  object-fit: cover;
+  display: block;
+  background: var(--n100);
+  border: 1px solid var(--n200);
+}
+
+/* Quantity badge — top-right corner of the image */
+.zx-item-qty {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--navy);
+  color: #fff;
+  font-size: 0.5rem;
+  font-weight: 800;
+  font-family: 'Goldman', sans-serif;
+  min-width: 18px;
+  height: 18px;
+  border-radius: var(--r-full);
+  padding: 0 4px;
+  border: 2px solid #fff;
+  line-height: 1;
+}
+
+.zx-item-name {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.4;
+}
+
+/* Hide WooCommerce's native ×N quantity badge (we render our own) */
+.product-quantity { display: none !important; }
+
+/* ── Order totals (tfoot) ───────────────────────────────────── */
+
+#order_review table.woocommerce-checkout-review-order-table tfoot tr {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4375rem 1.25rem;
+}
+
+#order_review table.woocommerce-checkout-review-order-table tfoot td,
+#order_review table.woocommerce-checkout-review-order-table tfoot th {
+  display: block !important;
+  padding: 0 !important;
+  font-size: 0.8125rem;
+  color: var(--n500);
+  border: none !important;
+}
+
+#order_review table.woocommerce-checkout-review-order-table tfoot .cart-subtotal {
+  border-top: 1px solid var(--n100) !important;
+  padding-top: 0.125rem !important;
+}
+#order_review table.woocommerce-checkout-review-order-table tfoot .cart-subtotal td,
+#order_review table.woocommerce-checkout-review-order-table tfoot .cart-subtotal th {
+  padding-top: 0.25rem !important;
+}
+
+#order_review table.woocommerce-checkout-review-order-table tfoot .order-total {
+  border-top: 2px solid var(--n200) !important;
+  padding: 0.875rem 1.25rem !important;
+  margin-top: 0.25rem;
+}
+#order_review table.woocommerce-checkout-review-order-table tfoot .order-total th,
+#order_review table.woocommerce-checkout-review-order-table tfoot .order-total td {
+  font-family: 'Goldman', sans-serif !important;
+  font-size: 1.0625rem !important;
+  font-weight: 800 !important;
+  color: var(--navy) !important;
+  padding: 0 !important;
+}
+
+/* ── Shipping row: método(s) de envío como opciones ─────────── */
+/* WC solo pinta radios cuando hay más de un método; con uno solo  */
+/* trae un input hidden y se muestra como una fila informativa.    */
+
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping,
+#order_review .woocommerce-checkout-review-order-table tfoot tr.woocommerce-shipping-totals {
+  display: block !important;
+  padding: 0.625rem 1.25rem !important;
+}
+
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping th {
+  display: block !important;
+  width: 100% !important;
+  padding: 0 0 0.5rem !important;
+  text-align: left !important;
+  font-family: 'Goldman', sans-serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping td {
+  display: block !important;
+  width: 100% !important;
+  padding: 0 !important;
+  text-align: left !important;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--n500);
+}
+
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li {
+  display: flex !important;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0.6875rem 0.875rem;
+  border: 1.5px solid var(--n200);
+  border-radius: var(--r);
+  background: #fff;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+/* Un único método (input hidden): fila informativa sin radio */
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li:has(> input[type="hidden"]) {
+  border-color: var(--n200);
+  background: var(--n50);
+}
+
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li.zx-shipping-selected:has(> input[type="radio"]) {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px var(--teal-10);
+}
+
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li input[type="radio"] {
+  display: inline-block !important;
+  flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.0625rem;
+  height: 1.0625rem;
+  margin: 0;
+  border: 2px solid var(--n300);
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li input[type="radio"]:checked {
+  border-color: var(--teal);
+  background: var(--teal);
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.4;
+}
+
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li label .woocommerce-Price-amount,
+#order_review .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li label bdi {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--teal);
+  white-space: nowrap;
+}
+
+/* Mismo bloque para el resumen desplegable en móvil */
+/* WC solo pinta radios cuando hay más de un método; con uno solo  */
+/* trae un input hidden y se muestra como una fila informativa.    */
+
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping,
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.woocommerce-shipping-totals {
+  display: block !important;
+  padding: 0.625rem 0 !important;
+}
+
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping th {
+  display: block !important;
+  width: 100% !important;
+  padding: 0 0 0.5rem !important;
+  text-align: left !important;
+  font-family: 'Goldman', sans-serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping td {
+  display: block !important;
+  width: 100% !important;
+  padding: 0 !important;
+  text-align: left !important;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--n500);
+}
+
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li {
+  display: flex !important;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0.6875rem 0.875rem;
+  border: 1.5px solid var(--n200);
+  border-radius: var(--r);
+  background: #fff;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+/* Un único método (input hidden): fila informativa sin radio */
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li:has(> input[type="hidden"]) {
+  border-color: var(--n200);
+  background: var(--n50);
+}
+
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li.zx-shipping-selected:has(> input[type="radio"]) {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px var(--teal-10);
+}
+
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li input[type="radio"] {
+  display: inline-block !important;
+  flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.0625rem;
+  height: 1.0625rem;
+  margin: 0;
+  border: 2px solid var(--n300);
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li input[type="radio"]:checked {
+  border-color: var(--teal);
+  background: var(--teal);
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.4;
+}
+
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li label .woocommerce-Price-amount,
+.zx-mobile-bar__body .woocommerce-checkout-review-order-table tfoot tr.shipping ul#shipping_method li label bdi {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--teal);
+  white-space: nowrap;
+}
+
+/* ── Payment card (left column section) ─────────────────────── */
+
+.zx-payment-card {
+  background: #fff;
+  border: 1px solid var(--n200);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-sm);
+  /* NO overflow:hidden — clips PayPal hosted field iframes */
+  margin-bottom: 1rem;
+}
+
+.zx-payment-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--n100);
+}
+
+.zx-payment-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Goldman', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+.zx-payment-card__title svg { color: var(--teal); flex-shrink: 0; }
+
+.zx-payment-card__secure {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--n400);
+}
+.zx-payment-card__secure svg { color: var(--teal); flex-shrink: 0; }
+
+/* ── WooCommerce blockUI overlay fix ─────────────────────────── */
+/* WC blocks form.checkout AND #order_review during AJAX totals  */
+/* refresh (triggered by payment method change, coupon, etc.).   */
+/* We neutralise all overlays — submission feedback comes from   */
+/* the disabled button + "Processing…" label instead.            */
+
+.woocommerce-checkout .blockUI.blockOverlay,
+#order_review .blockUI.blockOverlay {
+  pointer-events: none !important;
+  background:     transparent !important;
+  cursor:         default !important;
+  opacity:        0 !important;
+}
+
+/* ── Payment section ────────────────────────────────────────── */
+
+#payment {
+  padding-bottom: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+#payment .wc_payment_methods {
+  list-style: none;
+  padding: 1rem 1.25rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+/*
+ * WooCommerce outputs:  <li> <input type="radio"> <label> <div.payment_box> </li>
+ * The radio is a SIBLING of the label, not inside it.
+ * We use flex on the li to align radio + label side-by-side,
+ * then wrap payment_box full-width below.
+ */
+#payment .wc_payment_methods li.wc_payment_method {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border: 1.5px solid var(--n200);
+  border-radius: var(--r);
+  /* NO overflow:hidden — clips card iframes and hosted fields */
+  transition: border-color .15s, box-shadow .15s;
+  cursor: pointer;
+}
+
+/* Selected state — JS adds .zx-selected */
+#payment .wc_payment_methods li.wc_payment_method.zx-selected {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px var(--teal-10);
+}
+
+/* The radio input — flex item, left side */
+#payment .wc_payment_methods li.wc_payment_method > input[type="radio"] {
+  flex-shrink: 0;
+  order: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 2px solid var(--n300);
+  border-radius: 50%;
+  margin: 0 0 0 1rem;
+  cursor: pointer;
+  background: #fff;
+  transition: border-color .15s, background .15s;
+  position: relative;
+}
+
+/* Custom radio checked state */
+#payment .wc_payment_methods li.wc_payment_method > input[type="radio"]:checked {
+  border-color: var(--teal);
+  background: var(--teal);
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+/* Label — flex item, fills remaining space */
+#payment .wc_payment_methods li.wc_payment_method > label {
+  order: 2;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--navy);
+  cursor: pointer;
+  margin: 0;
+  min-height: 52px;
+}
+
+/* Payment method logos inside label */
+#payment .wc_payment_methods li.wc_payment_method > label img {
+  max-height: 26px;
+  width: auto;
+  object-fit: contain;
+  margin-left: 0.375rem;
+  flex-shrink: 0;
+}
+
+/* payment_box — full-width row below radio+label */
+#payment .payment_box {
+  order: 3;
+  flex-basis: 100%;
+  background: var(--n50);
+  border-top: 1px solid var(--n100);
+  padding: 1rem 1.25rem;
+  font-size: 0.8125rem;
+  color: var(--n500);
+  border-radius: 0 0 var(--r) var(--r);
+}
+
+#payment .payment_box p { margin: 0 0 0.5rem; }
+#payment .payment_box p:last-child { margin: 0; }
+
+/* Ensure iframes / hosted card fields inside payment_box are visible */
+#payment .payment_box iframe {
+  max-width: 100%;
+  display: block;
+}
+
+/* ── Card / Stripe / PayPal hosted fields ────────────────────── */
+
+/* Generic card field container */
+#payment .payment_box .form-row,
+#payment .payment_box .wc-credit-card-form {
+  margin-bottom: 0.75rem;
+}
+#payment .payment_box .form-row:last-child { margin-bottom: 0; }
+
+#payment .payment_box label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--navy);
+  display: block;
+  margin-bottom: 0.375rem;
+  padding: 0;
+  min-height: auto;
+}
+
+/* Stripe Elements */
+#wc-stripe-card-element,
+#wc-stripe-payment-element,
+.wc-stripe-card-element-container,
+[id*="stripe"][id*="element"] {
+  border: 1.5px solid var(--n200);
+  border-radius: var(--r);
+  background: #fff;
+  padding: 0.8125rem 1rem;
+  margin-top: 0.5rem;
+  min-height: 44px;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+/* PayPal Advanced (Hosted Fields): card number, expiry, cvv           */
+/* NO padding on containers — PayPal SDK measures the container size   */
+/* to size its iframes; padding causes SDK to mis-measure and fail.    */
+#card-number-field-container,
+#expiry-date-field-container,
+#cvv-field-container,
+[id$="-field-container"] {
+  display: block;
+  border: 1.5px solid var(--n200);
+  border-radius: var(--r);
+  background: #fff;
+  min-height: 44px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  transition: border-color .15s;
+}
+
+/* Iframes injected by PayPal SDK must fill the container exactly */
+#card-number-field-container iframe,
+#expiry-date-field-container iframe,
+#cvv-field-container iframe,
+[id$="-field-container"] iframe {
+  width: 100% !important;
+  height: 44px !important;
+  border: none !important;
+  display: block !important;
+}
+
+.ppcp-credit-card-gateway-card-fields {
+  margin-bottom: 0.5rem;
+}
+
+/* Google Pay / Apple Pay button containers */
+#ppc-button-googlepay,
+#ppc-button-applepay,
+[id*="ppc-button"],
+.ppcp-button-apm {
+  margin-top: 0.5rem;
+  border-radius: var(--r);
+  overflow: hidden;
+  min-height: 48px;
+}
+
+/* PayPal Smart Button container */
+.paypal-button-container,
+#paypal-button-container {
+  margin-top: 0.5rem;
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+/* ── Place order button ─────────────────────────────────────── */
+
+#payment .place-order {
+  padding: 1.25rem 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  border-top: 1px solid var(--n100);
+  margin-top: 0.25rem;
+}
+
+#payment #place_order {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  padding: 1rem 2rem !important;
+  background: var(--teal) !important;
+  border: none !important;
+  border-radius: var(--r-full) !important;
+  font-family: 'Goldman', sans-serif !important;
+  font-size: 0.9375rem !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  box-shadow: var(--teal-glow) !important;
+  transition: opacity .2s, transform .1s !important;
+  height: auto !important;
+  line-height: 1.5 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+/* Lock icon before place order */
+#payment #place_order::before {
+  content: '';
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='11' x='3' y='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  flex-shrink: 0;
+}
+
+#payment #place_order:hover { opacity: 0.88 !important; }
+#payment #place_order:active { transform: scale(0.98) !important; }
+#payment #place_order:disabled { opacity: 0.5 !important; cursor: not-allowed !important; box-shadow: none !important; }
+
+/* Terms */
+#payment .place-order .woocommerce-terms-and-conditions-wrapper {
+  font-size: 0.6875rem;
+  color: var(--n400);
+  text-align: center;
+  line-height: 1.6;
+}
+#payment .place-order .woocommerce-terms-and-conditions-wrapper a { color: var(--teal); }
+
+/* ── Back to cart ───────────────────────────────────────────── */
+
+.zx-back-wrap {
+  padding: 0 1.25rem 1.25rem;
+  text-align: center;
+}
+
+.zx-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--n500);
+  text-decoration: none;
+  transition: color .15s;
+}
+.zx-back-link:hover { color: var(--navy); }
+
+/* ── Trust row ──────────────────────────────────────────────── */
+
+.zx-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.875rem;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border: 1px solid var(--n200);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-sm);
+}
+
+.zx-trust__item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--n400);
+}
+.zx-trust__item svg { color: var(--teal); flex-shrink: 0; }
+.zx-trust__sep { color: var(--n300); font-size: 0.6875rem; }
+
+/* ── Coupon ─────────────────────────────────────────────────── */
+
+.woocommerce-form-coupon-toggle {
+  margin-bottom: 1rem;
+}
+.woocommerce-form-coupon-toggle .showcoupon {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--teal);
+  text-decoration: none;
+}
+.woocommerce-form-coupon-toggle .showcoupon:hover { text-decoration: underline; }
+
+.checkout_coupon {
+  background: #fff;
+  border: 1px solid var(--n200);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-sm);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.checkout_coupon p:first-of-type { display: none; }
+.checkout_coupon .form-row { margin: 0; flex: 1; min-width: 140px; }
+
+.checkout_coupon button[type="submit"],
+.checkout_coupon .button {
+  background: var(--navy) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: var(--r) !important;
+  padding: 0.75rem 1.25rem !important;
+  font-weight: 700 !important;
+  font-size: 0.875rem !important;
+  font-family: 'Geist', sans-serif !important;
+  cursor: pointer !important;
+  transition: opacity .2s !important;
+  white-space: nowrap;
+  height: auto !important;
+  line-height: 1.5 !important;
+}
+.checkout_coupon button[type="submit"]:hover,
+.checkout_coupon .button:hover { opacity: 0.85 !important; }
+
+/* ── Notices ────────────────────────────────────────────────── */
+
+@keyframes zx-notice-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.woocommerce-notices-wrapper { margin-bottom: 1.25rem; }
+
+.woocommerce-error,
+.woocommerce-message,
+.woocommerce-info {
+  position: relative !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.75rem !important;
+  border-radius: var(--r) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  padding: 0.9rem 2.5rem 0.9rem 1rem !important;
+  border: none !important;
+  border-left: 4px solid !important;
+  list-style: none !important;
+  margin: 0 0 0.75rem !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.07) !important;
+  animation: zx-notice-in .28s ease both !important;
+  transition: opacity .22s ease, transform .22s ease !important;
+}
+
+/* Icon via ::before on the list itself (error) or on div (message/info) */
+.woocommerce-error::before,
+.woocommerce-message::before,
+.woocommerce-info::before {
+  content: '' !important;
+  display: block !important;
+  flex-shrink: 0 !important;
+  width: 18px !important;
+  height: 18px !important;
+  margin-top: 1px !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+
+/* Error — red */
+.woocommerce-error {
+  background: #FEF2F2 !important;
+  border-color: #EF4444 !important;
+  color: #991B1B !important;
+}
+.woocommerce-error::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23EF4444' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E") !important;
+}
+
+/* Error li items */
+.woocommerce-error li {
+  display: block !important;
+  list-style: none !important;
+  padding: 0 !important;
+  line-height: 1.5 !important;
+}
+.woocommerce-error li + li { margin-top: 0.25rem !important; }
+
+/* Success — green */
+.woocommerce-message {
+  background: #F0FDF4 !important;
+  border-color: #22C55E !important;
+  color: #166534 !important;
+}
+.woocommerce-message::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322C55E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/%3E%3Cpolyline points='22 4 12 14.01 9 11.01'/%3E%3C/svg%3E") !important;
+}
+
+/* Info — teal */
+.woocommerce-info {
+  background: var(--teal-lt) !important;
+  border-color: var(--teal) !important;
+  color: var(--navy) !important;
+}
+.woocommerce-info::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300B8D4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='16' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12.01' y2='8'/%3E%3C/svg%3E") !important;
+}
+
+/* Close button injected by JS */
+.zx-notice-close {
+  position: absolute !important;
+  top: 0.6rem !important;
+  right: 0.75rem !important;
+  width: 20px !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  opacity: .45 !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font-size: 1.1rem !important;
+  line-height: 1 !important;
+  transition: opacity .15s !important;
+}
+.zx-notice-close:hover { opacity: .85 !important; }
+
+/* Dismissing state */
+.zx-notice-dismissing {
+  opacity: 0 !important;
+  transform: translateY(-6px) !important;
+  pointer-events: none !important;
+}
+
+/* ── Thank you page ─────────────────────────────────────────── */
+
+.zx-thankyou-main { padding: 2.5rem 1rem 5rem; }
+
+.zx-thankyou {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.zx-thankyou__icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--teal) 0%, #C40E47 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 10px 32px rgba(230,17,81,.38);
+}
+
+.zx-thankyou__title {
+  font-family: 'Goldman', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--navy);
+  text-align: center;
+  margin: 0 0 0.5rem;
+}
+
+.zx-thankyou__sub {
+  font-size: 0.9375rem;
+  color: var(--n500);
+  text-align: center;
+  margin: 0 0 2rem;
+}
+
+.zx-woo-content {
+  background: #fff;
+  border: 1px solid var(--n200);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.zx-woo-content .woocommerce-order { padding: 1.5rem; margin: 0; }
+
+.zx-woo-content .woocommerce-order-overview {
+  background: var(--n50);
+  border-radius: var(--r);
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
+}
+
+.zx-woo-content .woocommerce-order-overview li { font-size: 0.8125rem; color: var(--n500); }
+
+.zx-woo-content .woocommerce-order-overview li strong {
+  display: block;
+  color: var(--navy);
+  font-weight: 700;
+  font-family: 'Goldman', sans-serif;
+}
+
+.zx-thankyou__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 480px) {
+  .zx-thankyou__actions { flex-direction: row; }
+}
+
+.zx-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border-radius: var(--r-full);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  font-family: 'Goldman', sans-serif;
+  text-decoration: none;
+  transition: opacity .2s;
+  cursor: pointer;
+  border: none;
+}
+.zx-btn:hover { opacity: 0.85; }
+.zx-btn--primary {
+  background: var(--teal);
+  color: #fff;
+  box-shadow: var(--teal-glow);
+}
+.zx-btn--outline {
+  border: 1.5px solid var(--n200) !important;
+  color: var(--navy);
+  background: #fff;
+}
+.zx-btn--outline:hover { border-color: var(--teal) !important; color: var(--teal); }
+
+/* ── Processing overlay ─────────────────────────────────────── */
+
+.zx-processing-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(23,23,23, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+}
+
+.zx-processing-overlay.zx-processing--active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.zx-processing-card {
+  background: #fff;
+  border-radius: var(--r-xl);
+  box-shadow: 0 24px 64px rgba(0,0,0,.18);
+  padding: 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  min-width: 260px;
+  text-align: center;
+}
+
+/* Spinner ring */
+.zx-processing-spinner {
+  width: 56px;
+  height: 56px;
+  animation: zx-spin 0.9s linear infinite;
+}
+
+.zx-processing-spinner svg {
+  width: 100%;
+  height: 100%;
+}
+
+.zx-processing-spinner circle {
+  stroke: var(--teal);
+  stroke-linecap: round;
+  stroke-dasharray: 90 60;
+  transform-origin: center;
+}
+
+@keyframes zx-spin {
+  to { transform: rotate(360deg); }
+}
+
+.zx-processing-title {
+  font-family: 'Goldman', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0;
+}
+
+.zx-processing-sub {
+  font-size: 0.8125rem;
+  color: var(--n400);
+  margin: 0;
+}
+
+
+/* ═══ v2.2 fixes ═══════════════════════════════════════════════ */
+
+/* WooCommerce ships `#payment div.payment_box` (grey + caret) — match its specificity */
+#payment div.payment_box {
+  background: var(--n50) !important;
+  color: var(--n500) !important;
+  margin: 0;
+}
+#payment div.payment_box::before,
+#payment div.payment_box::after { display: none !important; }
+
+/* Only PayPal is enabled: no radio, no boxed "selection" look */
+#payment .wc_payment_methods li.wc_payment_method:only-child > input[type="radio"] { display: none; }
+#payment .wc_payment_methods li.wc_payment_method:only-child > label { padding-left: 1.25rem; }
+#payment .wc_payment_methods li.wc_payment_method:only-child { cursor: default; }
+
+/* PayPal hides the native Place order button and shows its own smart button.
+ * Our `display:flex !important` on #place_order was overriding that, so both showed. */
+#payment #place_order.ppcp-hidden,
+#payment #place_order[style*="display: none"],
+#payment .place-order .ppcp-hidden { display: none !important; }
+#payment .place-order:not(:has(#place_order:not(.ppcp-hidden):not([style*="display: none"]))) {
+  padding-top: 1rem;
+}
+
+.ppcp-button-wrapper,
+#ppc-button-ppcp-gateway,
+#ppc-button-minicart { position: relative; z-index: 0; }
+
+/* ── Notices: the icon must sit in the flow, not over the text ── */
+.woocommerce-error::before,
+.woocommerce-message::before,
+.woocommerce-info::before {
+  position: static !important;
+  inset: auto !important;
+  float: none !important;
+  font-family: inherit !important;
+  line-height: 1 !important;
+}
+.woocommerce-error a,
+.woocommerce-message a,
+.woocommerce-info a { color: inherit !important; font-weight: 700; text-decoration: underline; }
+.woocommerce-error li { flex: 1; min-width: 0; }
+.woocommerce-error li strong { font-weight: 700; }
+
+/* WooCommerce prepends the error group to <form>, outside .zx-container:
+ * give it the same width and gutters so it isn't full-bleed. */
+form.checkout > .woocommerce-NoticeGroup,
+form.checkout > .woocommerce-error,
+form.checkout > .woocommerce-message,
+form.checkout > .woocommerce-info {
+  max-width: 1200px;
+  margin: 1.25rem auto 0 !important;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+form.checkout > .woocommerce-NoticeGroup .woocommerce-error,
+form.checkout > .woocommerce-NoticeGroup .woocommerce-message { margin: 0 0 0.75rem !important; }
+
+/* PayPal selected → only PayPal's own smart button is used.
+ * Independent of how the gateway hides the native button. */
+body:has(input[name="payment_method"][value^="ppcp"]:checked) #payment #place_order {
+  display: none !important;
+}
+body:has(input[name="payment_method"][value^="ppcp"]:checked) #payment .place-order {
+  border-top: 0;
+  padding-top: 0.5rem;
+}
+
+/* PayPal guard shield: covers the smart button only while required fields are missing */
+.zx-pay-guard {
+  position: absolute;
+  inset: 0;
+  z-index: 1000; /* PayPal iframe is z-index:100 */
+  cursor: pointer;
+  background: transparent;
+}
+
+/* ═══ v2.3.2 — Order summary redesign ══════════════════════════ */
+
+/* WC's #order_review padding + table.shop_table border/margin made the
+ * table look like a square box floating inside the rounded card. */
+.zx-summary-card #order_review {
+  padding: 0 !important;
+  width: auto !important;
+  float: none !important;
+  border: 0 !important; /* WC/theme draw a 2px #ddd box on #order_review */
+  border-radius: 0 !important;
+}
+#order_review table.woocommerce-checkout-review-order-table {
+  border: 0 !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Product row */
+#order_review table.woocommerce-checkout-review-order-table tbody tr {
+  align-items: center !important;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-bottom: 0;
+}
+/* A stray &nbsp; text node after the item wrapper created a second, empty line */
+#order_review table.woocommerce-checkout-review-order-table tbody td.product-name {
+  font-size: 0;
+  line-height: 0;
+}
+.zx-item-wrap { gap: 0.875rem; }
+.zx-item-thumb { width: 60px; height: 60px; border-radius: 14px; background: #fff; }
+.zx-item-name {
+  font-family: 'Goldman', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--navy);
+}
+#order_review table.woocommerce-checkout-review-order-table tbody td.product-total {
+  font-family: 'Goldman', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+/* Totals: one soft inset panel instead of loose rows */
+#order_review table.woocommerce-checkout-review-order-table tfoot {
+  margin: 0 1.25rem 0.5rem;
+  padding: 0.5rem 0;
+  background: var(--n50);
+  border: 1px solid var(--n100);
+  border-radius: var(--r);
+}
+#order_review table.woocommerce-checkout-review-order-table tfoot tr {
+  padding: 0.45rem 1rem;
+  border: 0 !important;
+}
+#order_review table.woocommerce-checkout-review-order-table tfoot .cart-subtotal {
+  border-top: 0 !important;
+  padding-top: 0.45rem !important;
+}
+#order_review table.woocommerce-checkout-review-order-table tfoot .cart-subtotal td,
+#order_review table.woocommerce-checkout-review-order-table tfoot .cart-subtotal th { padding-top: 0 !important; }
+#order_review table.woocommerce-checkout-review-order-table tfoot th {
+  font-weight: 600;
+  color: var(--n500);
+}
+#order_review table.woocommerce-checkout-review-order-table tfoot td {
+  font-weight: 600;
+  color: var(--navy);
+  text-align: right;
+}
+#order_review table.woocommerce-checkout-review-order-table tfoot tr.shipping td { text-align: right; }
+
+/* Total */
+#order_review table.woocommerce-checkout-review-order-table tfoot .order-total {
+  margin-top: 0.5rem;
+  padding: 0.9rem 1rem 0.5rem !important;
+  border-top: 1px dashed var(--n200) !important;
+}
+#order_review table.woocommerce-checkout-review-order-table tfoot .order-total th,
+#order_review table.woocommerce-checkout-review-order-table tfoot .order-total td {
+  font-size: 1.125rem !important;
+  text-align: right;
+}
+#order_review table.woocommerce-checkout-review-order-table tfoot .order-total th { text-align: left; }
+
+/* Back link */
+.zx-back-wrap { padding: 0.5rem 1.25rem 1.25rem; }
+.zx-back-link {
+  padding: 0.5rem 1rem;
+  border-radius: var(--r-full);
+  transition: color .15s, background .15s;
+}
+.zx-back-link:hover { color: var(--teal); background: var(--teal-10); }
+
+/* ═══ v2.3.3 — Mobile summary bar ══════════════════════════════ */
+
+/* The theme paints buttons navy on :hover/:focus/:active. On touch screens hover
+ * sticks after a tap, so the navy total (#171717) vanished on a navy background. */
+.zx-mobile-bar .zx-mobile-bar__btn,
+.zx-mobile-bar .zx-mobile-bar__btn:hover,
+.zx-mobile-bar .zx-mobile-bar__btn:focus,
+.zx-mobile-bar .zx-mobile-bar__btn:active {
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--navy) !important;
+  text-decoration: none;
+}
+.zx-mobile-bar .zx-mobile-bar__btn:active { background: var(--n50) !important; }
+.zx-mobile-bar .zx-mobile-bar__btn:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: -2px;
+}
+@media (hover: hover) {
+  .zx-mobile-bar .zx-mobile-bar__btn:hover { background: var(--n50) !important; }
+}
+.zx-mobile-bar .zx-mobile-bar__left,
+.zx-mobile-bar .zx-mobile-bar__btn:hover .zx-mobile-bar__left,
+.zx-mobile-bar .zx-mobile-bar__btn:focus .zx-mobile-bar__left { color: var(--teal) !important; }
+.zx-mobile-bar .zx-mobile-bar__right,
+.zx-mobile-bar .zx-mobile-bar__right strong,
+.zx-mobile-bar .zx-mobile-bar__btn:hover .zx-mobile-bar__right,
+.zx-mobile-bar .zx-mobile-bar__btn:focus .zx-mobile-bar__right { color: var(--navy) !important; }
+
+/* Expanded summary: same look as the desktop card */
+.zx-mobile-bar__body { padding: 0.25rem 1.25rem 1.25rem; }
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table {
+  border: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tbody tr {
+  padding: 1rem 0;
+  border-bottom: 0;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tbody td.product-name {
+  font-size: 0;
+  line-height: 0;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tbody td.product-total {
+  font-family: 'Goldman', sans-serif;
+  font-size: 0.9375rem;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot {
+  padding: 0.5rem 0;
+  background: var(--n50);
+  border: 1px solid var(--n100);
+  border-radius: var(--r);
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot tr {
+  padding: 0.45rem 1rem;
+  border: 0 !important;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot .cart-subtotal { border-top: 0 !important; }
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot th { font-weight: 600; }
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot td {
+  font-weight: 600;
+  color: var(--navy);
+  text-align: right;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot .order-total {
+  margin-top: 0.5rem;
+  padding: 0.9rem 1rem 0.5rem !important;
+  border-top: 1px dashed var(--n200) !important;
+}
+.zx-mobile-bar__body table.woocommerce-checkout-review-order-table tfoot .order-total th { text-align: left; }
+
+
+/* ================================================================
+   Chrome de la web ZX: barra superior, cabecera, pie y WhatsApp
+   ================================================================ */
+
+.zx-topbar { background: var(--teal); color: #fff; }
+.zx-topbar__inner {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.5rem 1.5rem;
+}
+.zx-topbar a { color: #fff; display: inline-flex; line-height: 0; opacity: .95; transition: opacity .15s; }
+.zx-topbar a:hover { opacity: .7; }
+
+.zx-header__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--n500);
+  text-decoration: none;
+  transition: color .15s;
+}
+.zx-header__back:hover { color: var(--teal); }
+.zx-header__back span { display: none; }
+@media (min-width: 640px) { .zx-header__back span { display: inline; } }
+.zx-header__secure { color: var(--n500); }
+
+.zx-whatsapp {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 300;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #22C55E;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,.2);
+  transition: transform .15s;
+}
+.zx-whatsapp:hover { transform: scale(1.06); }
+
+.zx-footer {
+  background: #fff;
+  border-top: 1px solid var(--n200);
+  margin-top: 2rem;
+  color: var(--n500);
+  font-size: 0.8125rem;
+}
+.zx-footer__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 1.5rem;
+}
+@media (min-width: 768px) { .zx-footer__inner { grid-template-columns: 1.6fr 1fr 1fr 1fr; } }
+.zx-footer__logo { height: 40px; width: auto; display: block; margin-bottom: 0.75rem; }
+.zx-footer__brand p { max-width: 26ch; }
+.zx-footer__title {
+  font-family: 'Goldman', sans-serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin-bottom: 0.75rem;
+}
+.zx-footer__col a { display: block; color: var(--n500); text-decoration: none; padding: 0.2rem 0; transition: color .15s; }
+.zx-footer__col a:hover { color: var(--teal); }
+.zx-footer__copy {
+  text-align: center;
+  border-top: 1px solid var(--n100);
+  padding: 1rem 1.5rem 1.5rem;
+  color: var(--n400);
+  font-size: 0.75rem;
+}
+
+
+/* ── Ajustes de pago (fondo del tema y contenedores de PayPal) ── */
+
+.woocommerce-checkout .zx-payment-card #payment,
+.woocommerce-checkout .zx-payment-card .woocommerce-checkout-payment,
+.woocommerce-checkout #payment div.form-row.place-order {
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+
+/* PayPal Payments deja contenedores vacíos con altura fija bajo #payment.
+   Solo ocupan espacio si hay una pasarela ppcp seleccionada. */
+.zx-payment-card > .ppc-button-wrapper,
+.zx-payment-card > [id*="ppc-button"] {
+  min-height: 0 !important;
+  margin: 0 !important;
+}
+.zx-payment-card:not(:has(input[name="payment_method"][value^="ppcp"]:checked)) > .ppc-button-wrapper,
+.zx-payment-card:not(:has(input[name="payment_method"][value^="ppcp"]:checked)) > [id*="ppc-button"] {
+  display: none !important;
+}
+.zx-payment-card > .ppcp-messages { padding: 0.75rem 1.25rem 0; font-size: 0.8125rem; color: var(--n500); }
+.zx-payment-card { overflow: visible; padding-bottom: 0.25rem; }
+
+@media (max-width: 767px) {
+  .zx-whatsapp { width: 44px; height: 44px; right: 0.75rem; bottom: 0.75rem; }
+  .zx-whatsapp svg { width: 22px; height: 22px; }
+  .zx-footer { margin-bottom: 0; }
+}
